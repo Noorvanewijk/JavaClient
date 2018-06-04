@@ -5,6 +5,10 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -15,13 +19,23 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.datacontract.schemas._2004._07.WebService_Models.ProductModel;
+import org.tempuri.IService;
+import org.tempuri.ServiceLocator;
+
 public class Store extends JFrame implements ActionListener {
 
+	ServiceLocator loc = new ServiceLocator();
+	IService service;
+	
 	public final static String BUY_PRESSED = "BUY_PRESSED";
 	public final static String REFRESH_PRESSED = "REFRESH_PRESSED";
 
 	private JPanel panel4;
 	private JPanel panel3;
+	
+	//List<Purchase> purchases = new List<Purchase>();
+    List<ProductModel> products = new ArrayList<ProductModel>();
 	
 	public Store() {
 
@@ -38,6 +52,12 @@ public class Store extends JFrame implements ActionListener {
 		p.add(panel3);
 		setSize(700, 350);
 		setVisible(true);
+		
+		try {
+			service = loc.getBasicHttpBinding_IService();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void leftPanel() {
@@ -82,6 +102,18 @@ public class Store extends JFrame implements ActionListener {
 		btn4.addActionListener(this);
 		btn4.setActionCommand(BUY_PRESSED);
 
+		// PRODUCTEN
+		try {
+			for (ProductModel product : service.getAllProducts()) {
+				products.add(product);
+			}
+			
+			//products = new ArrayList<ProductModel>(Arrays.asList(service.getAllProducts()));
+			System.out.println(products);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
 		JList<String> list = new JList<String>(listModel);
 		JScrollPane scroll = new JScrollPane(list);

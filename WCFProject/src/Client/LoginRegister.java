@@ -3,6 +3,7 @@ package Client;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,6 +14,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import org.datacontract.schemas._2004._07.WebService_Models.UserModel;
 import org.tempuri.BasicHttpBinding_IServiceStub;
 import org.tempuri.IService;
 import org.tempuri.ServiceLocator;
@@ -22,13 +24,16 @@ public class LoginRegister extends JFrame implements ActionListener {
 	ServiceLocator loc = new ServiceLocator();
 	IService service;
 
-	// IService service = loc.getBasicHttpBinding_IService();
-
 	public final static String REGISTER_PRESSED = "REGISTER_PRESSED";
 	public final static String LOGIN_PRESSED = "LOGIN_PRESSED";
+	public static UserModel gebruiker;
 
 	private JPanel panel1;
 	private JPanel panel2;
+	
+	JTextField username;
+	JTextField txuser;
+	JPasswordField pass;
 
 	public LoginRegister() {
 
@@ -63,11 +68,11 @@ public class LoginRegister extends JFrame implements ActionListener {
 		welcome.setBounds(170, 10, 150, 60);
 		panel1.add(welcome);
 
-		JTextField txuser = new JTextField(15);
+		txuser = new JTextField(15);
 		txuser.setBounds(140, 65, 150, 20);
 		panel1.add(txuser);
 
-		JPasswordField pass = new JPasswordField(15);
+		pass = new JPasswordField(15);
 		pass.setBounds(140, 100, 150, 20);
 		panel1.add(pass);
 
@@ -86,9 +91,9 @@ public class LoginRegister extends JFrame implements ActionListener {
 		regi.setBounds(150, 10, 150, 60);
 		panel2.add(regi);
 
-		JTextField newuser = new JTextField(15);
-		newuser.setBounds(140, 65, 150, 20);
-		panel2.add(newuser);
+		username = new JTextField(15);
+		username.setBounds(140, 65, 150, 20);
+		panel2.add(username);
 
 		JLabel regi2 = new JLabel("Dan krijg je wachtwoord");
 		regi2.setBounds(150, 70, 150, 60);
@@ -106,10 +111,36 @@ public class LoginRegister extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getActionCommand().equals(REGISTER_PRESSED)) {
-			JOptionPane.showMessageDialog(null, "Registratie succesvol!", "Success", 1);
+			String newuser = username.getText();
+			
+			try {
+				UserModel regigebruiker = service.registerUser(newuser);
+				if (regigebruiker == null) {
+					JOptionPane.showMessageDialog(null, "Deze gebruiker bestaat al!", "Failure", 1);
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"Gebruiker: " + regigebruiker.getUsername() + " gemaakt met wachtwoord: " + regigebruiker.getPassword(),
+							"Success", 1);
+				}
+				
+			} catch (RemoteException e1) {
+				e1.printStackTrace();
+			}
+			
 		} else if (e.getActionCommand().equals(LOGIN_PRESSED)) {
-			Store store = new Store();
-			store.NewScreen();
+			
+			try {
+				gebruiker = service.loginUser(txuser.getText(), pass.getText());
+				if (gebruiker != null) {
+					Store store = new Store();
+					store.NewScreen();
+				} else {
+					JOptionPane.showMessageDialog(null, "Gebruikersnaam of wachtwoord klopt niet", "Failure", 1);
+				}
+				
+			} catch (RemoteException e1) {
+				e1.printStackTrace();
+			}
 		}
 
 	}
