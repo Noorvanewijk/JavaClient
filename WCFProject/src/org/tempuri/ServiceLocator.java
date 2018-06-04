@@ -39,7 +39,7 @@ public class ServiceLocator extends org.apache.axis.client.Service implements or
         BasicHttpBinding_IServiceWSDDServiceName = name;
     }
 
-    public org.tempuri.IService getBasicHttpBinding_IService() throws javax.xml.rpc.ServiceException {
+	public org.tempuri.IService getBasicHttpBinding_IService() throws javax.xml.rpc.ServiceException {
        java.net.URL endpoint;
         try {
             endpoint = new java.net.URL(BasicHttpBinding_IService_address);

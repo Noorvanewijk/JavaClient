@@ -13,12 +13,14 @@ import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import org.tempuri.BasicHttpBinding_IServiceStub;
+import org.tempuri.IService;
+import org.tempuri.ServiceLocator;
+
 public class LoginRegister extends JFrame implements ActionListener {
 	
-/*	ServiceLocator loc = new ServiceLocator();
-	Service service = loc.getBasicHttpBinding_IService();
-	
-    public static UserModel gebruiker;*/
+	ServiceLocator loc = new ServiceLocator();
+	//IService service = loc.getBasicHttpBinding_IService();
 	
 	public final static String REGISTER_PRESSED = "REGISTER_PRESSED";
 	public final static String LOGIN_PRESSED = "LOGIN_PRESSED";
