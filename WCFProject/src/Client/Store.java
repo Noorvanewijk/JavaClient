@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.datacontract.schemas._2004._07.WebService_Models.ProductModel;
+import org.datacontract.schemas._2004._07.WebService_Models.UserModel;
 import org.tempuri.IService;
 import org.tempuri.ServiceLocator;
 
@@ -36,6 +37,7 @@ public class Store extends JFrame implements ActionListener {
 	
 	//List<Purchase> purchases = new List<Purchase>();
     List<ProductModel> products = new ArrayList<ProductModel>();
+    UserModel user;
 	
 	public Store() {
 
@@ -55,6 +57,7 @@ public class Store extends JFrame implements ActionListener {
 		
 		try {
 			service = loc.getBasicHttpBinding_IService();
+			user = service.getUserById(LoginRegister.gebruiker.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -69,8 +72,8 @@ public class Store extends JFrame implements ActionListener {
 		JLabel inventory = new JLabel("Inventory:");
 		inventory.setBounds(40, 10, 100, 100);
 		panel4.add(inventory);
-
-		JLabel money = new JLabel("Money:");
+		
+		JLabel money = new JLabel("Money:" + user.getFunds());
 		money.setBounds(40, 140, 100, 100);
 		panel4.add(money);
 
@@ -103,16 +106,18 @@ public class Store extends JFrame implements ActionListener {
 		btn4.setActionCommand(BUY_PRESSED);
 
 		// PRODUCTEN
-		try {
-			for (ProductModel product : service.getAllProducts()) {
-				products.add(product);
-			}
-			
-			//products = new ArrayList<ProductModel>(Arrays.asList(service.getAllProducts()));
-			System.out.println(products);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			
+//			//products = Arrays.asList(service.getAllProducts());
+////			for (ProductModel product : service.getAllProducts()) {
+////				products.add(product);
+////			}
+//			
+//			//products = new ArrayList<ProductModel>(Arrays.asList(service.getAllProducts()));
+//			System.out.println(products);
+//		} catch (RemoteException e) {
+//			e.printStackTrace();
+//		}
 		
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
 		JList<String> list = new JList<String>(listModel);
