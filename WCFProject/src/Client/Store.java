@@ -143,7 +143,8 @@ public class Store extends JFrame implements ActionListener {
 						if (purchases.stream().filter(x -> x.getProductId() == products.get(index).getId())
 								.count() == 0) {
 							purchases.add(new Purchase(products.get(index).getId(), products.get(index).getName(), 1));
-						} else {
+						}
+						else {
 							Purchase p = purchases.stream().filter(x -> x.getProductId() == products.get(index).getId())
 									.findFirst().get();
 							p.setAmount(p.getAmount() + 1);
@@ -213,6 +214,9 @@ public class Store extends JFrame implements ActionListener {
 
 	private Boolean purchase() {
 		if (purchases.size() == 0) {
+			JOptionPane.showMessageDialog(null,
+					"U heeft niks geselecteerd om te kopen!",
+					"Failure", 1);
 			return false;
 		}
 
@@ -228,6 +232,9 @@ public class Store extends JFrame implements ActionListener {
 		try {
 			success = service.createNewTransaction(user.getId(), convertIntegerList(productIds),
 					convertIntegerList(productAmounts));
+			JOptionPane.showMessageDialog(null,
+					"Uw aankopen zijn verwerkt!",
+					"Success", 1);
 		} catch (RemoteException e) {
 		}
 
@@ -239,6 +246,9 @@ public class Store extends JFrame implements ActionListener {
 
 		if (e.getActionCommand().equals(REFRESH_PRESSED)) {
 			refreshAll();
+			JOptionPane.showMessageDialog(null,
+					"Inventory en winkel zijn opnieuw herladen!",
+					"Laden..", 1);
 		} else if (e.getActionCommand().equals(BUY_PRESSED)) {
 			if (purchase()) {
 				purchases = new ArrayList<Purchase>();
